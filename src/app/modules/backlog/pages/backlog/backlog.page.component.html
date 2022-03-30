@@ -21,35 +21,28 @@
         </button>
     </div>
     <div class="modal-body">
-        <form>
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Title</label>
-                <div class="col-sm-10">
-                    <input class="form-control" [(ngModel)]="newItem.title" name="title" />
-                </div>
-            </div>
+        <form class="k-form k-form-horizontal">
 
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Description</label>
-                <div class="col-sm-10">
-                    <textarea class="form-control" [(ngModel)]="newItem.description" name="description"></textarea>
-                </div>
-            </div>
+            <kendo-formfield orientation="horizontal">
+                <kendo-label [for]="title">Title</kendo-label>
+                <input #title kendoTextBox [(ngModel)]="newItem.title" name="title" />
+            </kendo-formfield>
 
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Item Type</label>
-                <div class="col-sm-10">
-                    <select class="form-control" [(ngModel)]="newItem.type" name="itemType">
-                        <option *ngFor="let itemType of itemTypesProvider" [ngValue]="itemType">{{itemType}}</option>
-                    </select>
-                </div>
-            </div>
+            <kendo-formfield orientation="horizontal">
+                <kendo-label [for]="description" >Description</kendo-label>
+                <textarea #description kendoTextArea [(ngModel)]="newItem.description" name="description"></textarea>
+            </kendo-formfield>
+
+            <kendo-formfield orientation="horizontal">
+                <kendo-label [for]="itemType">Item</kendo-label>
+                <kendo-dropdownlist #itemType [data]="itemTypesProvider" [(ngModel)]="newItem.type" name="itemType"></kendo-dropdownlist>
+            </kendo-formfield>
 
         </form>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" (click)="modal.dismiss('Cross click')">Close</button>
-        <button type="button" class="btn btn-primary" [disabled]="!newItem.title" (click)="modal.close(newItem)">Save
+        <button type="button" kendoButton data-dismiss="modal" (click)="modal.dismiss('Cross click')">Close</button>
+        <button type="button" kendoButton [disabled]="!newItem.title" (click)="modal.close(newItem)">Save
             changes</button>
     </div>
 </ng-template>
