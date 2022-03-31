@@ -10,6 +10,8 @@ import { InputsModule } from '@progress/kendo-angular-inputs';
 import { ComboBoxModule, DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { ListViewModule } from '@progress/kendo-angular-listview';
 import { AvatarModule, CardModule, TabStripModule } from '@progress/kendo-angular-layout';
+import { ChartsModule } from '@progress/kendo-angular-charts';
+import 'hammerjs';
 
 import { PresetFilterComponent } from './components/preset-filter/preset-filter.component';
 import { MainMenuComponent } from './components/main-menu/main-menu.component';
@@ -31,7 +33,8 @@ import { SideMenuComponent } from './components/side-menu/side-menu.component';
         ListViewModule,
         AvatarModule,
         CardModule,
-        TabStripModule
+        TabStripModule,
+        ChartsModule
     ],
     exports: [
         FormsModule,
@@ -48,7 +51,8 @@ import { SideMenuComponent } from './components/side-menu/side-menu.component';
         ListViewModule,
         AvatarModule,
         CardModule,
-        TabStripModule
+        TabStripModule,
+        ChartsModule
     ],
     declarations: [
         MainMenuComponent,

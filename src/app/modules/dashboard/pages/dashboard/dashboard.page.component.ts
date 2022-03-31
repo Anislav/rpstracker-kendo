@@ -8,6 +8,7 @@ import { StatusCounts } from '../../models';
 import { DashboardFilter } from 'src/app/shared/models/dto/stats/dashboard-filter';
 import { PtUser } from 'src/app/core/models/domain';
 import { PtUserService } from 'src/app/core/services';
+import { FilteredIssues } from '../../repositories/dashboard.repository';
 
 
 interface DateRange {
@@ -23,6 +24,8 @@ interface DateRange {
 export class DashboardPageComponent implements OnInit, OnDestroy {
 
     private sub: Subscription | undefined;
+    private issuesSub: Subscription | undefined;
+
     public filter: DashboardFilter = {};
     public filteredDateStart: Date | undefined;
     public filteredDateEnd: Date | undefined;
@@ -35,6 +38,14 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     });
 
     public users$: Observable<PtUser[]> = this.store.select<PtUser[]>('users');
+    public issuesAll$: BehaviorSubject<FilteredIssues> = new BehaviorSubject<FilteredIssues>({
+      categories: [],
+      items: []
+    });
+
+    public categories: Date[] = [];
+    public itemsOpenByMonth: number[] = [];
+    public itemsClosedByMonth: number[] = [];
 
     private get currentUserId() {
         if (this.store.value.currentUser) {
@@ -51,6 +62,16 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     ) { }
 
     public ngOnInit() {
+        this.issuesAll$.subscribe((issues: FilteredIssues) => {
+          this.categories = issues.categories.map(c => new Date(c));
+
+          this.itemsOpenByMonth = [];
+          this.itemsClosedByMonth = [];
+          issues.items.forEach((item, index) => {
+              this.itemsOpenByMonth.push(item.open.length);
+              this.itemsClosedByMonth.push(item.closed.length);
+          });
+        });
         this.refresh();
     }
 
@@ -84,6 +105,11 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         this.sub = this.dashboardService.getStatusCounts(this.filter)
             .subscribe(result => {
                 this.statusCounts$.next(result);
+            });
+
+        this.issuesSub = this.dashboardService.getFilteredIssues(this.filter)
+            .subscribe((result: FilteredIssues) => {
+                this.issuesAll$.next(result);
             });
     }
 
