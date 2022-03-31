@@ -11,17 +11,22 @@
             </h2>
         </div>
 
-        <div class="btn-toolbar mb-2 mb-md-0">
-            <div class="btn-group mr-2">
-                <button type="button" class="btn btn-sm btn-outline-secondary" (click)="onMonthRangeTap(3)">3
-                    Months</button>
-                <button type="button" class="btn btn-sm btn-outline-secondary" (click)="onMonthRangeTap(6)">6
-                    Months</button>
-                <button type="button" class="btn btn-sm btn-outline-secondary" (click)="onMonthRangeTap(12)">1
-                    Year</button>
-            </div>
+        <kendo-combobox style="width: 200px;"
+          [data]="users$ | async" textField="fullName" valueField="fullName"
+          [suggest]="true"
+          (open)="userFilterOpen()" (valueChange)="userFilterValueChange($event)">
 
-        </div>
+          <ng-template kendoComboBoxItemTemplate let-userItem>
+            <kendo-avatar [imageSrc]="userItem.avatar"></kendo-avatar>
+            <span style="margin-left:10px;">{{ userItem.fullName }}</span>
+          </ng-template>
+        </kendo-combobox>
+
+        <kendo-buttongroup selection="single">
+          <button kendoButton [toggleable]="true" (click)="onMonthRangeTap(3)">3 Months</button>
+          <button kendoButton [toggleable]="true" (click)="onMonthRangeTap(6)">6 Months</button>
+          <button kendoButton [toggleable]="true" (click)="onMonthRangeTap(12)">1 Year</button>
+        </kendo-buttongroup>
     </div>
 
 

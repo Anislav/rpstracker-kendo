@@ -1,11 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 import { DashboardService } from '../../services/dashboard.service';
 import { Store } from 'src/app/core/state/app-store';
 import { StatusCounts } from '../../models';
 import { DashboardFilter } from 'src/app/shared/models/dto/stats/dashboard-filter';
+import { PtUser } from 'src/app/core/models/domain';
+import { PtUserService } from 'src/app/core/services';
 
 
 interface DateRange {
@@ -32,6 +34,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         openItemsCount: 0
     });
 
+    public users$: Observable<PtUser[]> = this.store.select<PtUser[]>('users');
+
     private get currentUserId() {
         if (this.store.value.currentUser) {
             return this.store.value.currentUser.id;
@@ -42,12 +46,27 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
     constructor(
         private dashboardService: DashboardService,
+        private userService: PtUserService,
         private store: Store
     ) { }
 
     public ngOnInit() {
         this.refresh();
     }
+
+    public userFilterOpen() {
+      this.userService.fetchUsers();
+    }
+
+    public userFilterValueChange(user: PtUser | undefined) {
+      if (user) {
+          this.filter.userId = user.id;
+      } else {
+          this.filter.userId = undefined;
+      }
+      this.refresh();
+    }
+
 
     public onMonthRangeTap(months: number) {
         const range = this.getDateRange(months);

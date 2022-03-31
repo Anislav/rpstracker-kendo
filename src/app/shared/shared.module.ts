@@ -4,10 +4,10 @@ import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ButtonsModule } from '@progress/kendo-angular-buttons';
+import { ButtonsModule, ButtonGroupModule } from '@progress/kendo-angular-buttons';
 import { LabelModule } from '@progress/kendo-angular-label';
 import { InputsModule } from '@progress/kendo-angular-inputs';
-import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
+import { ComboBoxModule, DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { ListViewModule } from '@progress/kendo-angular-listview';
 import { AvatarModule, CardModule, TabStripModule } from '@progress/kendo-angular-layout';
 
@@ -23,8 +23,10 @@ import { SideMenuComponent } from './components/side-menu/side-menu.component';
         BrowserAnimationsModule,
         NgbModule,
         ButtonsModule,
+        ButtonGroupModule,
         LabelModule,
         InputsModule,
+        ComboBoxModule,
         DropDownListModule,
         ListViewModule,
         AvatarModule,
@@ -41,6 +43,7 @@ import { SideMenuComponent } from './components/side-menu/side-menu.component';
         ButtonsModule,
         LabelModule,
         InputsModule,
+        ComboBoxModule,
         DropDownListModule,
         ListViewModule,
         AvatarModule,
