@@ -9,7 +9,7 @@ import { LabelModule } from '@progress/kendo-angular-label';
 import { InputsModule } from '@progress/kendo-angular-inputs';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { ListViewModule } from '@progress/kendo-angular-listview';
-import { AvatarModule, CardModule } from '@progress/kendo-angular-layout';
+import { AvatarModule, CardModule, TabStripModule } from '@progress/kendo-angular-layout';
 
 import { PresetFilterComponent } from './components/preset-filter/preset-filter.component';
 import { MainMenuComponent } from './components/main-menu/main-menu.component';
@@ -28,7 +28,8 @@ import { SideMenuComponent } from './components/side-menu/side-menu.component';
         DropDownListModule,
         ListViewModule,
         AvatarModule,
-        CardModule
+        CardModule,
+        TabStripModule
     ],
     exports: [
         FormsModule,
@@ -43,7 +44,8 @@ import { SideMenuComponent } from './components/side-menu/side-menu.component';
         DropDownListModule,
         ListViewModule,
         AvatarModule,
-        CardModule
+        CardModule,
+        TabStripModule
     ],
     declarations: [
         MainMenuComponent,
