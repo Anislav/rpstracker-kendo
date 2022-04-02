@@ -16,6 +16,12 @@
       </ng-template>
     </kendo-tabstrip-tab>
 
+    <kendo-tabstrip-tab title="Schedule" [selected]="isTabSelected('schedule')">
+      <ng-template kendoTabContent>
+          <app-item-task-schedule [tasks$]="tasks$" (addNewTask)="onAddNewTask($event)" (updateTask)="onUpdateTask($event)"></app-item-task-schedule>
+      </ng-template>
+  </kendo-tabstrip-tab>
+
     <kendo-tabstrip-tab title="Chitchat" [selected]="isTabSelected('chitchat')">
       <ng-template kendoTabContent>
         <app-item-chitchat [comments$]="comments$" [currentUser]="currentUser$ | async" (addNewComment)="onAddNewComment($event)"></app-item-chitchat>
