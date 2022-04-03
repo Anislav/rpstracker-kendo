@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiEndpoint: 'http://produrl.com/api/',
+  apiEndpoint: 'https://rps-tracker-api.herokuapp.com/api/',
   loggingEnabled: true,
   loggingLevel: 'Debug'
 };

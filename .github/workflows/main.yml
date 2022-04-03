@@ -1,0 +1,27 @@
+name: Build and deploy to github pages
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies 🧰
+        run: |
+          npm install
+          npm link @angular/cli
+
+      - name: Build 🔨
+        run: |
+          ng build --output-path build --base-href /rpstracker-kendo/
+          cp build/index.html build/404.html
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4.2.5
+        with:
+          branch: gh-pages
+          folder: build
