@@ -9,6 +9,7 @@ import { BacklogService } from '../../services/backlog.service';
 import { PtUserService, NavigationService } from 'src/app/core/services';
 import { PtNewTask, PtTaskUpdate, PtNewComment } from 'src/app/shared/models/dto';
 import { Store } from 'src/app/core/state/app-store';
+import { SelectEvent } from '@progress/kendo-angular-layout';
 
 @Component({
     selector: 'app-backlog-detail-page',
@@ -44,11 +45,21 @@ export class DetailPageComponent implements OnInit, OnDestroy {
             });
 
         const screen = this.activatedRoute.snapshot.params['screen'] as DetailScreenType;
-        if (screen === 'details' || screen === 'tasks' || screen === 'chitchat') {
+        if (screen === 'details' || screen === 'tasks' || screen === 'schedule'  || screen === 'chitchat') {
             this.selectedDetailsScreen = screen;
         } else {
             this.navigationService.navigate([`/detail/${this.itemId}/details`]);
         }
+    }
+
+    public isTabSelected(screen: DetailScreenType) {
+      return this.selectedDetailsScreen === screen;
+    }
+
+    public onTabSelect(e: SelectEvent) {
+      const screen = e.title.toLowerCase() as DetailScreenType;
+      this.selectedDetailsScreen = screen;
+      this.navigationService.navigate([`/detail/${this.itemId}/${screen}`]);
     }
 
     public onScreenSelected(screen: DetailScreenType) {

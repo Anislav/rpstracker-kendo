@@ -1,24 +1,20 @@
-import { Injectable, NgZone, Inject } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
+
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
 import { environment as env } from '../../../../environments/environment';
-
 import { Store } from '../../../core/state/app-store';
 import { BacklogRepository } from '../repositories/backlog.repository';
-import { ServerErrorHandlerService } from '../../../core/services';
 import { PtItem, PtUser, PtTask, PtComment } from '../../../core/models/domain';
 import { PtNewItem, PtNewTask, PtNewComment } from '../../../shared/models/dto';
 import { PriorityEnum, StatusEnum } from '../../../core/models/domain/enums';
 import { getUserAvatarUrl } from '../../../core/helpers/user-avatar-helper';
-import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
 import { PresetType } from 'src/app/core/models/domain/types';
+import { datesForTask, datesForPtItem } from 'src/app/core/helpers';
 
 @Injectable()
 export class BacklogService {
-
-    private get currentPreset() {
-        return this.store.value.selectedPreset;
-    }
 
     private get currentUserId() {
         if (this.store.value.currentUser) {
@@ -39,6 +35,7 @@ export class BacklogService {
             .pipe(
                 map((ptItems: PtItem[]) => {
                     ptItems.forEach(i => {
+                        datesForPtItem(i);
                         this.setUserAvatarUrl(i.assignee);
                         i.comments.forEach(c => this.setUserAvatarUrl(c.user));
                     });
@@ -71,6 +68,7 @@ export class BacklogService {
                 tap((ptItem: PtItem) => {
                     this.setUserAvatarUrl(ptItem.assignee);
                     ptItem.comments.forEach(c => this.setUserAvatarUrl(c.user));
+                    ptItem.tasks.forEach(t => datesForTask(t));
                 })
             );
     }
@@ -99,6 +97,7 @@ export class BacklogService {
                          this.store.set('backlogItems', [nextItem, ...this.store.value.backlogItems]);
                      });
                      */
+                    nextItem.tasks.forEach(t => datesForTask(t));
                     resolve(nextItem);
                 }
             );
@@ -128,18 +127,22 @@ export class BacklogService {
             title: newTask.title,
             completed: false,
             dateCreated: new Date(),
-            dateModified: new Date()
+            dateModified: new Date(),
+            dateStart: newTask.dateStart ? newTask.dateStart : undefined,
+            dateEnd: newTask.dateEnd ? newTask.dateEnd : undefined
         };
         return new Promise<PtTask>((resolve, reject) => {
             this.repo.insertPtTask(
                 task,
                 currentItem.id,
                 (nextTask: PtTask) => {
+                    datesForTask(nextTask);
                     resolve(nextTask);
                 }
             );
         });
     }
+
 
     public updatePtTask(currentItem: PtItem, task: PtTask, toggle: boolean, newTitle?: string): Promise<PtTask> {
 
@@ -148,12 +151,15 @@ export class BacklogService {
             title: newTitle ? newTitle : task.title,
             completed: toggle ? !task.completed : task.completed,
             dateCreated: task.dateCreated,
-            dateModified: new Date()
+            dateModified: new Date(),
+            dateStart: task.dateStart ? task.dateStart : undefined,
+            dateEnd: task.dateEnd ? task.dateEnd : undefined
         };
 
         return new Promise<PtTask>((resolve, reject) => {
             this.repo.updatePtTask(taskToUpdate, currentItem.id,
                 (updatedTask: PtTask) => {
+                    datesForTask(updatedTask);
                     resolve(updatedTask);
                 }
             );

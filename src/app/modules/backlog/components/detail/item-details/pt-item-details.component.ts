@@ -12,6 +12,7 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 @Component({
     selector: 'app-item-details',
     templateUrl: 'pt-item-details.component.html',
+    styleUrls: ['pt-item-details.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PtItemDetailsComponent implements OnInit {
@@ -45,6 +46,15 @@ export class PtItemDetailsComponent implements OnInit {
             this.selectedPriorityValue = <PriorityEnum>this.itemForm.priorityStr;
             this.selectedAssignee = this.item.assignee;
         }
+    }
+
+    public getPriorityClass(priority: PriorityEnum): string {
+      const indicatorClass = PriorityEnum.getIndicatorClass(priority);
+      return indicatorClass;
+    }
+
+    public getIndicatorImage(itemType: PtItemType) {
+      return ItemType.imageResFromType(itemType);
     }
 
     public onBlurTextField() {

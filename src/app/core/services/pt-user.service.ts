@@ -21,7 +21,7 @@ export class PtUserService {
         private store: Store
     ) { }
 
-    public fetchUsers(nameFilter: string) {
+    public fetchUsers(nameFilter?: string) {
         this.http.get<PtUser[]>(this.getUsersUrl(nameFilter))
             .subscribe((data: PtUser[]) => {
                 data.forEach(u => {
