@@ -1,13 +1,13 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy, EventEmitter, Output } from '@angular/core';
 
+import { Observable } from 'rxjs';
+
 import { PtItem, PtUser } from 'src/app/core/models/domain';
 import { PtItemDetailsEditFormModel, ptItemToFormModel } from 'src/app/shared/models/forms';
 import { PtItemType } from 'src/app/core/models/domain/types';
 import { PriorityEnum } from 'src/app/core/models/domain/enums';
 import { ItemType, PT_ITEM_STATUSES, PT_ITEM_PRIORITIES } from 'src/app/core/constants';
-import { Observable } from 'rxjs';
 import { Store } from 'src/app/core/state/app-store';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-item-details',
@@ -23,8 +23,6 @@ export class PtItemDetailsComponent implements OnInit {
 
     public users$: Observable<PtUser[]> = this.store.select<PtUser[]>('users');
 
-    private selectedTypeValue: PtItemType | undefined;
-    private selectedPriorityValue: PriorityEnum | undefined;
     public selectedAssignee: PtUser | undefined;
 
     public itemForm: PtItemDetailsEditFormModel = ptItemToFormModel();
@@ -32,18 +30,15 @@ export class PtItemDetailsComponent implements OnInit {
     public statusesProvider = PT_ITEM_STATUSES;
     public prioritiesProvider = PT_ITEM_PRIORITIES;
 
-    closeResult = '';
+    public assigneePickerDisplayed = false;
 
     constructor(
         private store: Store,
-        private modalService: NgbModal
     ) { }
 
     public ngOnInit() {
         if (this.item) {
             this.itemForm = ptItemToFormModel(this.item);
-            this.selectedTypeValue = <PtItemType>this.itemForm.typeStr;
-            this.selectedPriorityValue = <PriorityEnum>this.itemForm.priorityStr;
             this.selectedAssignee = this.item.assignee;
         }
     }
@@ -65,17 +60,21 @@ export class PtItemDetailsComponent implements OnInit {
         this.notifyUpdateItem();
     }
 
-    public assigneePickerOpen(content: any) {
-        this.usersRequested.emit();
-        this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
-            if (typeof result === 'object' && this.itemForm) {
-                this.selectedAssignee = result;
-                this.itemForm.assigneeName = (result as PtUser).fullName;
-                this.notifyUpdateItem();
-            }
-        }, (reason) => {
+    public openAssigneePicker() {
+      this.usersRequested.emit();
+      this.assigneePickerDisplayed = true;
+    }
 
-        });
+    public onSelectAssignee(user: PtUser) {
+      this.selectedAssignee = user;
+      this.itemForm.assigneeName = user.fullName;
+      this.notifyUpdateItem();
+
+      this.assigneePickerDisplayed = false;
+    }
+
+    public onCloseAssigneePicker() {
+      this.assigneePickerDisplayed = false;
     }
 
     private notifyUpdateItem() {

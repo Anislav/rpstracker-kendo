@@ -58,35 +58,25 @@
 
   <kendo-formfield orientation="horizontal">
     <kendo-label>Assignee</kendo-label>
-    <button kendoButton (click)="assigneePickerOpen(content)">
+    <button kendoButton (click)="openAssigneePicker()">
       <img [src]="selectedAssignee?.avatar" class="li-avatar rounded" />
     </button>
   </kendo-formfield>
 </form>
 
-
-<ng-template #content let-modal>
+<kendo-dialog *ngIf="assigneePickerDisplayed" width="25%" height="75%" title="Select Assignee" (close)="onCloseAssigneePicker()">
 
   <kendo-listview [data]="users$ | async">
 
-    <ng-template kendoListViewHeaderTemplate>
-      <div class="modal-header">
-        <h4>Select Assignee</h4>
-        <button kendoButton type="button" aria-label="Close" (click)="modal.dismiss('Cross click')">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-    </ng-template>
-
-    <ng-template kendoListViewItemTemplate let-dataItem>
-      <kendo-card orientation="horizontal" style="width: 100%; cursor: pointer;" (click)="modal.close(dataItem)">
+    <ng-template kendoListViewItemTemplate let-user>
+      <kendo-card orientation="horizontal" style="width: 100%; cursor: pointer;" (click)="onSelectAssignee(user)">
 
         <kendo-card-header>
-          <kendo-avatar [imageSrc]="dataItem?.avatar"></kendo-avatar>
+          <kendo-avatar [imageSrc]="user?.avatar"></kendo-avatar>
         </kendo-card-header>
 
         <kendo-card-body>
-          <span>{{ dataItem?.fullName }}</span>
+          <span>{{ user?.fullName }}</span>
         </kendo-card-body>
 
       </kendo-card>
@@ -94,4 +84,8 @@
 
   </kendo-listview>
 
-</ng-template>
+  <kendo-dialog-actions>
+    <button kendoButton (click)="onCloseAssigneePicker()">Close</button>
+  </kendo-dialog-actions>
+
+</kendo-dialog>

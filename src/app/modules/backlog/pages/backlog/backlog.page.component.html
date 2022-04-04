@@ -9,7 +9,7 @@
 
 
         <div class="btn-group mr-2">
-            <button kendoButton type="button" (click)="onAddTap(content)">Add</button>
+            <button kendoButton type="button" (click)="onAddTap()">Add</button>
         </div>
 
     </div>
@@ -59,36 +59,31 @@
 
 </kendo-grid>
 
-<ng-template #content let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Add New Item</h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <form class="k-form k-form-horizontal">
 
-            <kendo-formfield orientation="horizontal">
-                <kendo-label [for]="title">Title</kendo-label>
-                <input #title kendoTextBox [(ngModel)]="newItem.title" name="title" />
-            </kendo-formfield>
+<kendo-dialog *ngIf="newItemDialogDisplayed" title="Add new item" (close)="onClose()">
+  <form class="k-form k-form-horizontal">
 
-            <kendo-formfield orientation="horizontal">
-                <kendo-label [for]="description" >Description</kendo-label>
-                <textarea #description kendoTextArea [(ngModel)]="newItem.description" name="description"></textarea>
-            </kendo-formfield>
+    <kendo-formfield orientation="horizontal">
+        <kendo-label [for]="title">Title</kendo-label>
+        <input #title kendoTextBox [(ngModel)]="newItem.title" name="title" />
+    </kendo-formfield>
 
-            <kendo-formfield orientation="horizontal">
-                <kendo-label [for]="itemType">Item</kendo-label>
-                <kendo-dropdownlist #itemType [data]="itemTypesProvider" [(ngModel)]="newItem.type" name="itemType"></kendo-dropdownlist>
-            </kendo-formfield>
+    <kendo-formfield orientation="horizontal">
+        <kendo-label [for]="description" >Description</kendo-label>
+        <textarea #description kendoTextArea [(ngModel)]="newItem.description" name="description"></textarea>
+    </kendo-formfield>
 
-        </form>
-    </div>
-    <div class="modal-footer">
-        <button type="button" kendoButton data-dismiss="modal" (click)="modal.dismiss('Cross click')">Close</button>
-        <button type="button" kendoButton [disabled]="!newItem.title" (click)="modal.close(newItem)">Save
-            changes</button>
-    </div>
-</ng-template>
+    <kendo-formfield orientation="horizontal">
+        <kendo-label [for]="itemType">Item</kendo-label>
+        <kendo-dropdownlist #itemType [data]="itemTypesProvider" [(ngModel)]="newItem.type" name="itemType"></kendo-dropdownlist>
+    </kendo-formfield>
+
+  </form>
+
+  <kendo-dialog-actions>
+    <button kendoButton (click)="onClose()">Close</button>
+    <button kendoButton themeColor="primary" [disabled]="!newItem.title" (click)="onSaveItem()">
+      Save
+    </button>
+  </kendo-dialog-actions>
+</kendo-dialog>

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { Subscription, BehaviorSubject } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GridDataResult, SelectableSettings, SelectionEvent } from '@progress/kendo-angular-grid';
 import { State, process, } from '@progress/kendo-data-query';
 
@@ -40,12 +39,12 @@ export class BacklogPageComponent implements OnInit {
 
   public itemTypesProvider = ItemType.List.map((t) => t.PtItemType);
   public newItem: PtNewItem | undefined;
+  public newItemDialogDisplayed = false;
 
   constructor(
       private activatedRoute: ActivatedRoute,
       private navigationService: NavigationService,
       private backlogService: BacklogService,
-      private modalService: NgbModal,
       private store: Store
   ) { }
 
@@ -82,21 +81,24 @@ export class BacklogPageComponent implements OnInit {
     this.navigationService.navigate(['backlog', preset]);
   }
 
-  public onAddTap(content: any) {
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
-      if (typeof result === 'object') {
-        if (this.store.value.currentUser) {
-            this.backlogService.addNewPtItem(result, this.store.value.currentUser)
-                .then(nextItem => {
-                    this.items$.next([nextItem, ...this.items$.value]);
-                });
-        }
+  public onAddTap() {
+    this.newItemDialogDisplayed = true;
+  }
 
-        this.resetModalFields();
-      }
-    }, (reason) => {
+  public onSaveItem() {
+    if (this.store.value.currentUser) {
+      this.backlogService.addNewPtItem(this.newItem, this.store.value.currentUser)
+          .then(nextItem => {
+            this.items$.next([nextItem, ...this.items$.value]);
+          });
+    }
 
-    });
+    this.onClose();
+  }
+
+  public onClose() {
+    this.newItemDialogDisplayed = false;
+    this.resetModalFields();
   }
 
   private resetModalFields() {
