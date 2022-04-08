@@ -1,8 +1,8 @@
 import { PtItem, PtUser } from '../models/domain';
 import { PresetType } from '../models/domain/types';
 
-export type StateKey = 'backlogItems' | 'users' | 'currentUser' | 'currentSelectedItem' | 'selectedPreset';
-export type StateValue = PtItem | PtUser | PtItem[] | PtUser[] | PresetType;
+export type StateKey = 'backlogItems' | 'users' | 'currentUser' | 'currentSelectedItem' | 'selectedPreset' | 'isMenuExpanded';
+export type StateValue = PtItem | PtUser | PtItem[] | PtUser[] | PresetType | boolean;
 
 export interface State {
     backlogItems: PtItem[];
@@ -10,6 +10,7 @@ export interface State {
     currentUser: PtUser | undefined;
     currentSelectedItem: PtItem | undefined;
     selectedPreset: PresetType;
+    isMenuExpanded: boolean;
     [key: string]: any;
 }
 
@@ -18,5 +19,6 @@ export const INITIAL_STATE: State = {
     users: [],
     currentUser: undefined,
     currentSelectedItem: undefined,
-    selectedPreset: 'open'
+    selectedPreset: 'open',
+    isMenuExpanded: true
 };
