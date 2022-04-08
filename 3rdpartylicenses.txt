@@ -64,6 +64,9 @@ SEE LICENSE IN LICENSE.md
 @progress/kendo-angular-listview
 SEE LICENSE IN LICENSE.md
 
+@progress/kendo-angular-navigation
+SEE LICENSE IN LICENSE.md
+
 @progress/kendo-angular-pager
 SEE LICENSE IN LICENSE.md
 
