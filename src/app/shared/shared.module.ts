@@ -8,7 +8,7 @@ import { LabelModule } from '@progress/kendo-angular-label';
 import { InputsModule } from '@progress/kendo-angular-inputs';
 import { ComboBoxModule, DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { ListViewModule } from '@progress/kendo-angular-listview';
-import { AvatarModule, CardModule, TabStripModule, DrawerModule } from '@progress/kendo-angular-layout';
+import { AvatarModule, CardModule, DrawerModule, TabStripModule, TileLayoutModule } from '@progress/kendo-angular-layout';
 import { AppBarModule } from '@progress/kendo-angular-navigation';
 import { GridModule } from '@progress/kendo-angular-grid';
 import { SchedulerModule } from '@progress/kendo-angular-scheduler';
@@ -30,8 +30,9 @@ const KENDO_MODULES = [
   ListViewModule,
   AvatarModule,
   CardModule,
-  TabStripModule,
   DrawerModule,
+  TabStripModule,
+  TileLayoutModule,
   AppBarModule,
   GridModule,
   SchedulerModule,

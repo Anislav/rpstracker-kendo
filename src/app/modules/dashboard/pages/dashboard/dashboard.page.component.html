@@ -1,60 +1,126 @@
-<div class="dashboard">
+<div>
 
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
 
-        <div class="col-md order-md-first text-center text-md-left">
-            <h2>
-                <span class="small text-uppercase text-muted d-block">Statistics</span>
-                <span *ngIf="filteredDateStart && filteredDateEnd">{{ filteredDateStart | date }} - {{ filteredDateEnd
-                    | date
-                    }}</span>
-            </h2>
-        </div>
-
-        <kendo-combobox style="width: 200px;"
-          [data]="users$ | async" textField="fullName" valueField="fullName"
-          [suggest]="true"
-          (open)="userFilterOpen()" (valueChange)="userFilterValueChange($event)">
-
-          <ng-template kendoComboBoxItemTemplate let-userItem>
-            <kendo-avatar rounded="medium" [imageSrc]="userItem.avatar"></kendo-avatar>
-            <span style="margin-left:10px;">{{ userItem.fullName }}</span>
-          </ng-template>
-        </kendo-combobox>
-
-        <kendo-buttongroup selection="single">
-          <button kendoButton [toggleable]="true" (click)="onMonthRangeTap(3)">3 Months</button>
-          <button kendoButton [toggleable]="true" (click)="onMonthRangeTap(6)">6 Months</button>
-          <button kendoButton [toggleable]="true" (click)="onMonthRangeTap(12)">1 Year</button>
-        </kendo-buttongroup>
-    </div>
-
-
-    <app-active-issues [statusCounts]="statusCounts$ | async"></app-active-issues>
-
-    <div class="row">
-      <div class="col-sm-12">
-          <h3>All issues</h3>
-          <kendo-chart>
-            <kendo-chart-series-defaults type="column" [stack]="true" [gap]="0.06"></kendo-chart-series-defaults>
-
-            <kendo-chart-category-axis>
-                <kendo-chart-category-axis-item
-                    [categories]="categories" baseUnit="months"
-                    [majorGridLines]="{visible: false}"
-                    [labels]="{rotation: 'auto', margin: { top: 20 }}">
-                </kendo-chart-category-axis-item>
-            </kendo-chart-category-axis>
-
-            <kendo-chart-series>
-                <kendo-chart-series-item [data]="itemsOpenByMonth" [opacity]="0.7" color="#CC3458">
-                </kendo-chart-series-item>
-
-                <kendo-chart-series-item [data]="itemsClosedByMonth" [opacity]="0.7" color="#35C473">
-                </kendo-chart-series-item>
-            </kendo-chart-series>
-
-          </kendo-chart>
+      <div class="col-md order-md-first text-center text-md-left">
+          <h2>
+              <span class="small text-uppercase text-muted d-block">Statistics</span>
+              <span *ngIf="filteredDateStart && filteredDateEnd">{{ filteredDateStart | date }} - {{ filteredDateEnd
+                  | date
+                  }}</span>
+          </h2>
       </div>
-    </div>
+
+      <kendo-combobox style="width: 200px;"
+        [data]="users$ | async" textField="fullName" valueField="fullName"
+        [suggest]="true"
+        (open)="userFilterOpen()" (valueChange)="userFilterValueChange($event)">
+
+        <ng-template kendoComboBoxItemTemplate let-userItem>
+          <kendo-avatar rounded="medium" [imageSrc]="userItem.avatar"></kendo-avatar>
+          <span style="margin-left:10px;">{{ userItem.fullName }}</span>
+        </ng-template>
+      </kendo-combobox>
+
+      <kendo-buttongroup selection="single">
+        <button kendoButton [toggleable]="true" (click)="onMonthRangeTap(3)">3 Months</button>
+        <button kendoButton [toggleable]="true" (click)="onMonthRangeTap(6)">6 Months</button>
+        <button kendoButton [toggleable]="true" (click)="onMonthRangeTap(12)">1 Year</button>
+      </kendo-buttongroup>
+  </div>
+
 </div>
+
+
+<kendo-tilelayout
+[columns]="4"
+[resizable]="true"
+[reorderable]="true"
+autoFlow="row"
+>
+  <kendo-tilelayout-item title="Active issues">
+    <kendo-tilelayout-item-body>
+
+      <div>
+        <span class="comp-label">
+          <strong>{{ (statusCounts$ | async).activeItemsCount }}</strong>
+        </span>
+      </div>
+
+    </kendo-tilelayout-item-body>
+  </kendo-tilelayout-item>
+
+  <kendo-tilelayout-item title="Closed issues">
+    <kendo-tilelayout-item-body>
+
+      <div class="text-success">
+        <span class="comp-label">
+            <strong>{{ (statusCounts$ | async).closedItemsCount}}</strong>
+        </span>
+    </div>
+
+    </kendo-tilelayout-item-body>
+  </kendo-tilelayout-item>
+
+  <kendo-tilelayout-item title="Open issues">
+    <kendo-tilelayout-item-body>
+
+      <div class="text-danger">
+        <span class="comp-label">
+            <strong>{{ (statusCounts$ | async).openItemsCount}}</strong>
+        </span>
+       </div>
+
+    </kendo-tilelayout-item-body>
+  </kendo-tilelayout-item>
+
+  <kendo-tilelayout-item title="Close rate">
+    <kendo-tilelayout-item-body>
+
+      <div>
+        <span class="comp-label">
+          <strong>{{ (statusCounts$ | async).closeRate | number:'1.0-0'}}%</strong>
+
+          <p class="m-0 small text-uppercase text-muted">
+              Highest:
+              100%
+              on Oct 11, 2018
+          </p>
+          <p class="m-0 small text-uppercase text-muted">
+              Lowest:
+              20%
+              on Oct 9, 2018
+          </p>
+        </span>
+      </div>
+
+    </kendo-tilelayout-item-body>
+  </kendo-tilelayout-item>
+
+  <kendo-tilelayout-item title="All issues" [colSpan]="4" [rowSpan]="3">
+    <kendo-tilelayout-item-body>
+
+      <kendo-chart>
+        <kendo-chart-series-defaults type="column" [stack]="true" [gap]="0.06"></kendo-chart-series-defaults>
+
+        <kendo-chart-category-axis>
+            <kendo-chart-category-axis-item
+                [categories]="categories" baseUnit="months"
+                [majorGridLines]="{visible: false}"
+                [labels]="{rotation: 'auto', margin: { top: 20 }}">
+            </kendo-chart-category-axis-item>
+        </kendo-chart-category-axis>
+
+        <kendo-chart-series>
+            <kendo-chart-series-item [data]="itemsOpenByMonth" [opacity]="0.7" color="#CC3458">
+            </kendo-chart-series-item>
+
+            <kendo-chart-series-item [data]="itemsClosedByMonth" [opacity]="0.7" color="#35C473">
+            </kendo-chart-series-item>
+        </kendo-chart-series>
+      </kendo-chart>
+
+    </kendo-tilelayout-item-body>
+  </kendo-tilelayout-item>
+
+</kendo-tilelayout>
